@@ -91,7 +91,12 @@ python core/inference/faiss_eval_search.py --model-dir /home/abishek/contrast_co
 
 ## Pre-Trained Embeddings
 
-You can find the pre-trained embeddings from the above link for WOMD dataset. TODO: Will upload the AV2 soon.
+You can find the pre-trained embeddings from the above link.
+
+```      
+- [x] WOMD
+- [x] AV2 dataset.
+```
 
 ## Release Notes
 
