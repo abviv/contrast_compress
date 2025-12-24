@@ -32,7 +32,7 @@ and controllable motion forecasting pipelines.
 
 Link to our paper: https://arxiv.org/pdf/2506.02571
 
-## Setup instructions for env
+## Setup Instructions for Env
 
 There are 2 options to create and use this. If you're not planning to use clearml then build a miniforge through conda-forge channels using the following command. Its tested only for the python 3.8 version but works until python 3.10.
 
@@ -46,7 +46,7 @@ If you're using clearml then I would suggest you to build the dockerfile at the 
 $ docker build -t env_traj_embeddings:latest .
 ```
 
-## Before full Training
+## Before Full Training
 
 Before training on server there is a dry_run option which is geared towards using a small sample of the train and test dataset and runs it for defined epochs. Use this option to test any new functionality before running a full training on the server.
 
@@ -66,7 +66,7 @@ python train_and_eval.py --config-name config_march_pudding_transformer 'clearml
 
 If you're running the python interpreter inside the container then you should run it with the user privilege. Add the following option while starting your container.
 
-### Optional: With Docker option
+### Optional: With Docker Option
 
 ```bash
 $ docker run -it --rm --gpus all -u 1000:1000 --entrypoint= -v /home/abishek/contrast_compress:/opt/project 
@@ -83,6 +83,28 @@ python core/inference/faiss_eval_search.py --model-dir /home/abishek/contrast_co
 
 `t_set_womd` raw trajectories will be updated soon. You can change this to av1/av2 for more analysis.
 
+## Dataset
+
+1. For training we used the processed future state of the AV2 dataset which you can access through the following [link](https://drive.google.com/drive/folders/1qZI_jOsqy6jV6puMsXTViULS0JdYGrH3?usp=sharing).
+
+2. Download the files from the link and organize the files such that the contents can be reached  via the path: `/home/abhishek/contrast_compress/data/t_set_av2`
+
+## Pre-Trained Embeddings
+
+You can find the pretrained embeddings from the 
+
 ## Release Notes
 
-Embeddings used within the paper and trained checkpoint of the models will be released soon.
+If you find our work useful, please consider citing our paper through the following BibTex
+
+```latex
+@misc{vivekanandan2025contrastcompresslearning,
+      title={Contrast & Compress: Learning Lightweight Embeddings for Short Trajectories}, 
+      author={Abhishek Vivekanandan and Christian Hubschneider and J. Marius Zöllner},
+      year={2025},
+      eprint={2506.02571},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/2506.02571}, 
+}
+```

@@ -99,6 +99,5 @@ core/runs
 outputs/
 runs/
 tb_logs/
-data/*
 sandbox_ipynb/
 core/data_analysis/visualization/*
