@@ -64,9 +64,9 @@ By default the `args.use_clearml=False` which means you dont have to use any of 
 python train_and_eval.py --config-name config_march_pudding_transformer 'clearml.additional_tags=[emb_dim_16, running_inference]' model.embedding_dim=16 model.num_heads=4 model.num_layers=1 clearml.append_to_task_name=march-pudding-emb-16-head-4-layer-1
 ```
 
-If you're running the python interpreter inside the container then you should run it with the user privilege. Add the following option while starting your container.
-
 ### Optional: With Docker Option
+
+If you're running the python interpreter inside the container then you should run it with the user privilege. Add the following option while starting your container.
 
 ```bash
 $ docker run -it --rm --gpus all -u 1000:1000 --entrypoint= -v /home/abishek/contrast_compress:/opt/project 
