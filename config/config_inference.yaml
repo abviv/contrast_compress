@@ -1,0 +1,21 @@
+
+defaults:
+  - config_local
+  - _self_
+
+data_module:
+  _target_: core.data_module_inference_av2.TrajectoryDataModuleInference
+  data_dir: 'data/2_av2'
+  batch_size: 8
+  num_workers: 1
+  split: 'train'
+  obs_len: 50
+
+args:
+  use_clearml: False
+  action: 'predict' # fit, validate, dry_run, predict
+  ckpt_path: 'data/trained_models/epoch=99-step=19400-three-husband.ckpt' #Needed for predict_mode
+  embeddings_path: None
+
+trainer:
+  limit_predict_batches: 0.001

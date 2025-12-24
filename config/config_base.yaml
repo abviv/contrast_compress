@@ -1,0 +1,68 @@
+defaults:
+  - _self_
+
+args:
+  use_clearml: False
+  action: 'fit' # fit, validate, dry_run, predict
+  lr: 1e-4
+  epochs: 100
+  batch_size: 128
+  num_workers: 32
+  similarity_function: fft_similarity #fft_similarity (or) cosine_similarity
+  cosine_load_factor: 0.2 # for cosine_similarity
+  mining_strategy: random_mining  # [hard_mining, semi_hard_mining, random mining]
+  ckpt_path: 'outputs/trained_models/your_trained_model.ckpt' #Needed for predict_mode
+  margin: ${loss.margin}
+
+trainer:
+  precision: 'bf16-mixed'
+  max_epochs: ${args.epochs}  # referenced from args
+  deterministic: true
+  check_val_every_n_epoch: 5
+  enable_progress_bar: true
+  accelerator: 'auto'
+  devices: 1
+  gradient_clip_val: 1.0
+  gradient_clip_algorithm: 'norm'
+  # Callbacks configuration
+  callbacks:
+    model_checkpoint:
+      monitor: "val_loss"
+      save_top_k: 4
+      mode: "min"
+    
+    learning_rate_monitor:
+      logging_interval: 'step'
+    
+    model_summary:
+      max_depth: -1
+
+  # Logger configuration
+  logger:
+    tensorboard:
+      name: "Logger_transformer"
+      save_dir: "tb_logs"
+
+  # Dry run specific settings
+  dry_run:
+    limit_train_batches: 0.001
+    limit_val_batches: 0.01
+    log_every_n_steps: 1
+    precision: 16
+
+
+clearml:
+  project_name: 'Abhishek/TrajEmbeddings'
+  task_name: null
+  tags: [emb_norm, raw_trajectory]
+  base_docker_img: 'abhishek/env_av2:radical'
+  queue_name: 'docker'
+  dataset_project: 'Abhishek/dataset/.datasets/t_sets'
+  dataset_name: 't_sets_new'
+
+loss:
+  _target_: core.loss.TripletLossWithMining
+  margin: 1e-2
+  emb_norm: True
+
+parent_dir: ${hydra:runtime.cwd} 

@@ -1,0 +1,60 @@
+args:
+  use_clearml: True
+  action: fit
+  lr: 0.0001
+  epochs: 100
+  batch_size: 4096
+  num_workers: 32
+  similarity_function: cosine_similarity
+  cosine_load_factor: 0.5
+  mining_strategy: random_mining
+  ckpt_path: outputs/trained_models/your_trained_model.ckpt #Needed for predict_mode
+  margin: ${loss.margin}
+  use_first_half_mask: false
+trainer:
+  precision: bf16-mixed
+  max_epochs: ${args.epochs}
+  deterministic: true
+  check_val_every_n_epoch: 5
+  enable_progress_bar: true
+  accelerator: auto
+  devices: 1
+  gradient_clip_val: 0.5
+  gradient_clip_algorithm: norm
+  callbacks:
+    model_checkpoint:
+      monitor: val_loss
+      save_top_k: 4
+      mode: min
+    learning_rate_monitor:
+      logging_interval: step
+    model_summary:
+      max_depth: -1
+  logger:
+    tensorboard:
+      name: Logger_transformer
+      save_dir: tb_logs
+  dry_run:
+    limit_train_batches: 0.001
+    limit_val_batches: 0.01
+    log_every_n_steps: 1
+    precision: 16
+clearml:
+  project_name: Abhishek/contrast_compress
+  task_name: null
+  append_to_task_name: null
+  tags:
+  - margin-0.3
+  - cosine_similarity
+  - random_mining
+  - cosine_balancer-rate-0.5
+  additional_tags: []
+  base_docker_img: abhishek/env_av2:radical
+  queue_name: A100
+  dataset_project: Abhishek/dataset/.datasets/t_sets
+  dataset_name: t_sets_new
+loss:
+  _target_: core.loss.TripletLossWithMining
+  margin: 0.3
+  emb_norm: true
+parent_dir: ${hydra:runtime.cwd}

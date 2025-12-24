@@ -1,0 +1,11 @@
+# Copy your existing config and modify only the embedding_dim
+defaults:
+  - config_local
+  - _self_
+
+model:
+  embedding_dim: 4  # Match the checkpoint architecture
+
+args:
+  action: test
+  ckpt_path: /home/abishek/git_area/xgen_trajectory_embeddings/data/trained_models/epoch-99-step-4900-march-pudding-emb_4.ckpt 

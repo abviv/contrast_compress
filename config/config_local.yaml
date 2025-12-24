@@ -1,0 +1,16 @@
+defaults:
+  - config_base
+  - _self_
+
+model:
+  _target_: core.models.transformer_encoders.SelfAttentionTrajectoryEncoder
+  input_dim: 2  # Assuming 2D trajectories
+  hidden_dim: 1024
+  num_heads: 8
+  num_layers: 4
+  embedding_dim: 128 # output dimension of the model
+  dropout: 0.3
+  norm_first: False
+  use_input_dropout: False
+  input_dropout: 0.2
+  trajectory_pooling: False

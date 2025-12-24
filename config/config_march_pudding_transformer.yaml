@@ -1,0 +1,19 @@
+defaults:
+  - config_march_pudding_base
+  - _self_
+
+clearml:
+  additional_tags: []
+
+model:
+  _target_: core.models.transformer_encoders.SelfAttentionTrajectoryEncoder
+  input_dim: 2
+  hidden_dim: 1024 # lean:512, base:1024
+  num_heads: 8 
+  num_layers: 4
+  embedding_dim: 128
+  dropout: 0.3
+  norm_first: false
+  use_input_dropout: true
+  input_dropout_rate: 0.2
+  trajectory_pooling: false
