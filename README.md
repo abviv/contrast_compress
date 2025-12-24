@@ -93,7 +93,7 @@ python core/inference/faiss_eval_search.py --model-dir /home/abishek/contrast_co
 
 You can find the pre-trained embeddings from the above link.
 
-```      
+```
 - [x] WOMD
 - [x] AV2 dataset.
 ```
