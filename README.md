@@ -95,7 +95,7 @@ You can find the pre-trained embeddings from the above link.
 
 ```
 - [x] WOMD
-- [x] AV2 dataset.
+- [x] AV2 dataset
 ```
 
 ## Release Notes
