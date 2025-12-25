@@ -1,5 +1,7 @@
 # File Structure Overview
 
+You can download the whole dir from the following [link](https://drive.google.com/drive/folders/1qZI_jOsqy6jV6puMsXTViULS0JdYGrH3?usp=sharing) and put them such that `data/` is at the `root_dir`.
+
 ```
 data/
 ├── t_set_av1/
