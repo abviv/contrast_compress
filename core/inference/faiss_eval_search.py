@@ -200,7 +200,9 @@ def load_av1_dataset(data_path=DEFAULT_AV1_DATA_PATH):
     Load the AV1 dataset from the specified path.
     
     Args:
-        data_path: Path to the AV1 dataset pickle file
+        data_path: Path to the AV1 dataset pickle file.
+                   The file should contain a dictionary with the key 'train_trajectories'
+                   pointing to a numpy array of shape (N, T, 2).
         
     Returns:
         av1_data: Dictionary containing trajectories
@@ -1025,7 +1027,7 @@ def parse_args():
     generate_parser.add_argument('--semi', type=int, default=100,
                                help='Percentage of data to process (1-100). Default: 100')
     generate_parser.add_argument('--data-path', type=str, default=None,
-                               help='Path to the AV1 dataset. If not provided, uses the default path.')
+                               help='Path to the dataset (.pkl). Must contain dict with key "train_trajectories" of shape (N, T, 2).')
     generate_parser.add_argument('--interpolate', type=bool, default=False,
                                help='Whether to interpolate the trajectories to shape (60,2). Default: False')
     
@@ -1063,7 +1065,7 @@ def parse_args():
     
     return parser.parse_args()
 
-def set_seed(seed=2024):
+def set_seed(seed=2026):
     np.random.seed(seed)
     torch.manual_seed(seed)
     random.seed(seed)
@@ -1075,7 +1077,7 @@ if __name__ == "__main__":
     use conda env: faiss_sim_search
     
     trained_models/
-     └── model_name/ <--- manual (this is the --model_dir)
+     └── model_name/ <--- manual
          ├── config.yaml <--- manual
          ├── checkpoint.ckpt <--- manual
          ├── embeddings_trajectory_model_name.pt # contains [train_trajectories,train_embeddings, test_trajectories, test_embeddings] <--- manual
@@ -1083,37 +1085,45 @@ if __name__ == "__main__":
              └── eval_results.pickle # will be created by the script
 
 
-    ## Generate: 
-    ### In this mode, the script will generate embeddings for the trajectories in the AV1/AV2/WOMD dataset.
+    ## Generate: In this mode, the script will generate embeddings for the trajectories in the AV1 dataset.
     The embeddings will be saved to the model directory. All the paths are auto-detected other than the model_dir path. 
+    
+    Data Input:
+    You can specify a custom input file using the `--data-path` argument. 
+    The input file MUST be a .pickle/.pkl file containing a dictionary with the following structure:
+    {
+        'train_trajectories': <numpy_array> 
+    }
+    - The numpy array should have shape (N_trajectories, time_steps, 2).
+    - Example shape: (486995, 80, 2)
+    
     The interpolate flag is optional and defaults to False. But if you set this true you're using the trained_trajectories shape (60,2). 
     Although this is not required as the model can handle the variable length of trajectories upto a flattend length of 1024 (512,2).
-    --model-dir : Path to the model directory containing checkpoints and config files
 
     $ python core/data_analysis/faiss_eval_search.py \
-    --model-dir /home/abishek/git_area/contrast_compress/data/trained_models/lucky-blame \
-    generate --semi 100 --interpolate True
+    --model-dir /home/abishek/git_area/xgen_trajectory_embeddings/data/trained_models/lucky-blame \
+    generate --semi 100 --interpolate True --data-path /path/to/your/custom_data.pkl
 
     ## Search: In this mode, the script will perform a similarity search on the embeddings of the query model
     with the embeddings of the reference model. The results will be saved to the model directory.
     In the following example, the query and reference models are optional and auto-detected based on the model_dir path
 
     $ python core/data_analysis/faiss_eval_search.py \
-    --model-dir /home/abishek/git_area/contrast_compress/data/trained_models/lucky-blame \
+    --model-dir /home/abishek/git_area/xgen_trajectory_embeddings/data/trained_models/lucky-blame \
     search --query-model 100-march-pudding-64 --ref-model 100-march-pudding-64 --num-queries 10 --k 6
     
     ## Perform-stat: In this mode, the script will calculate minADE and minFDE between query trajectories 
     and their K nearest neighbors found through FAISS search.
     
     $ python core/data_analysis/faiss_eval_search.py \
-    --model-dir /home/abishek/git_area/contrast_compress/data/trained_models/lucky-blame \
+    --model-dir /home/abishek/git_area/xgen_trajectory_embeddings/data/trained_models/lucky-blame \
     perform-stat --query-model 100-march-pudding-64 --ref-model 100-march-pudding-64 --k 6
 
     Switch to a different evaluation result file by performing the touch following command. Since the code picks the latest evaluation result file so a `touch` ensures it.
-    $ touch /home/abishek/git_area/contrast_compress/data/trained_models/ugly-melody-cosine/evaluation_results/eval_results_1.pickle
+    $ touch /home/abishek/git_area/xgen_trajectory_embeddings/data/trained_models/ugly-melody-cosine/evaluation_results/eval_results_1.pickle
     
     and then you can run the following command to perform minADE and minFDE analysis.
-    $ python core/data_analysis/faiss_eval_search.py --model-dir /home/abishek/git_area/contrast_compress/data/trained_models/ugly-melody-cosine/ perform-stat --k 6
+    $ python core/data_analysis/faiss_eval_search.py --model-dir /home/abishek/git_area/xgen_trajectory_embeddings/data/trained_models/ugly-melody-cosine/ perform-stat --k 6
     """
     set_seed()
     args = parse_args()
