@@ -62,7 +62,7 @@ Retrieving similar trajectories efficiently is critical for motion forecasting a
 
 ```bash
 conda env create -f env.yml
-conda activate traj_embeddings
+conda activate contrast_compress_env
 ```
 
 **Option 2: Docker (for ClearML integration)**
@@ -166,7 +166,7 @@ See `config/` directory for all available configurations.
 
 ## Project Structure
 
-```
+```latex
 contrast_compress/
 ├── train_and_eval.py          # Main training entry point
 ├── config/                    # Hydra configuration files
